@@ -30,7 +30,7 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db("taskManagementDB").collection("users")
-
+    const taskCollection = client.db("taskManagementDB").collection("tasks")
   //users related api
   app.post('/users',async(req,res)=>{
     const user= req.body;
@@ -44,8 +44,32 @@ async function run() {
     res.send(result)
    })
 
+//task related api
+app.post('/tasks',async(req,res)=>{
+  const task=req.body
+  const result = await taskCollection.insertOne(task)
+  res.send(result)
+})
+   
 
-
+//email specific task list
+//email specific vendor product list
+app.get('/tasks',async(req,res)=>{
+  try {
+    const email = req.query.email;
+    const status= req.query.status;
+    const query = { email: email };
+    if (status) {
+      query.status = status;
+    }
+    const result = await taskCollection.find(query).sort({ createdAt: -1 }).toArray();
+    console.log(result);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+ })
 
 
 
