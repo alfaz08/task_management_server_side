@@ -79,7 +79,13 @@ app.delete('/tasks/:id',async(req,res)=>{
   res.send(result)
 })
 
-
+//update task
+app.get('/update/:id',async(req,res)=>{
+  const id =req.params.id
+  const query ={_id: new ObjectId(id)}
+  const task =await taskCollection.findOne(query)
+  res.send(task)
+})
 
 
 
