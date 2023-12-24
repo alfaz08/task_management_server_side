@@ -87,7 +87,35 @@ app.get('/update/:id',async(req,res)=>{
   res.send(task)
 })
 
-
+  app.patch('/task/:id', async (req, res) => {
+    try {
+   
+  const id =req.params.id
+      
+  const filter ={_id: new ObjectId(id)}
+     
+     
+      const dataToUpdate = {
+        title: req.body.title,
+        description:req.body.description,
+        date:req.body.date,
+        priority:req.body.priority,
+        status:'todo'
+      };
+    console.log(dataToUpdate);
+      const updateDoc = {
+        $set: dataToUpdate,
+      };
+  
+    
+      const result = await taskCollection.updateOne(filter, updateDoc);
+  
+      res.send(result);
+    } catch (error) {
+      console.error('Error updating badge:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 
 
